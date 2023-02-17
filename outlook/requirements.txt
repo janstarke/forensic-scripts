@@ -1,0 +1,4 @@
+libpff-python
+striprtf
+chardet
+coloredlogs
