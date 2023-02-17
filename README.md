@@ -1,4 +1,4 @@
-# forensics
+# Forensic scripts
 Collection of useful forensic scripts
 
 | Topic | Tool | Task |
