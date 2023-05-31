@@ -49,7 +49,10 @@ class Bodyfile3Line:
                 subject=item.get_subject())
             self.__mode = "r/rwxrwxrwx"
             self.__identifier = str(item.get_identifier())
-            self.__size = message_size(item)
+            try:
+                self.__size = message_size(item)
+            except:
+                self.__size = -1
             self.__ignore = False
         elif isinstance(item, pypff.folder):
             self.__crtime = -1

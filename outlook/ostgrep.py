@@ -49,8 +49,11 @@ class Grepper:
                 return
             if self.__print_if_body_matches(parent_path, item, item.get_rtf_body()):
                 return
-            if self.__print_if_body_matches(parent_path, item, item.get_html_body()):
-                return
+            try:
+                if self.__print_if_body_matches(parent_path, item, item.get_html_body()):
+                    return
+            except:
+                pass
 
         elif isinstance(item, pypff.folder):
             for si in item.sub_items:
