@@ -220,7 +220,7 @@ function registry_timeline {
 function evtx_timeline {
 	LOGS_PATH="$1"
   echo "[+] creating windows evtx timeline" >&2
-  evtx2bodyfile "$LOGS_PATH/*.evtx" | mactime2 -d | gzip -c - >evtx.csv.gz
+  evtx2bodyfile "$LOGS_PATH/"*.evtx | mactime2 -d | gzip -c - >evtx.csv.gz
 }
 ###########################################################
 
