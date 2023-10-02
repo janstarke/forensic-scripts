@@ -6,9 +6,11 @@ import coloredlogs
 import logging
 import os
 import shutil
-from dissect.target import Target, container, volume
+from dissect.target import Target
 
-from tlnobjects import UserAssist
+from tlnobjects import *
+from utils import CsvFileFactory
+
 
 def arguments():
     parser = argparse.ArgumentParser(
@@ -67,8 +69,10 @@ if __name__ == '__main__':
             sys.exit(1)
     os.makedirs(dstdir)
 
+    factory = CsvFileFactory(dstdir)
+
     store(t.version, os.path.join(dstdir, "version.txt"))
     store(t.ips, os.path.join(dstdir, "ips.txt"))
-    store_users(t.users(), os.path.join(dstdir, "users.csv"))
-    ua = UserAssist(t)
-    ua.to_csv(open(os.path.join(dstdir, "userassist.csv"), "w"))
+
+    UserAssist(t).to_csv(factory)
+    WindowsUser(t).to_csv(factory)

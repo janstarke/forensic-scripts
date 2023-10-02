@@ -1,2 +1,3 @@
-from .userassist import UserAssist
+from .UserAssist import UserAssist
+from .WindowsUser import WindowsUser
 
