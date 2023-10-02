@@ -19,6 +19,10 @@ def arguments():
     )
     parser.add_argument('image_path')
     parser.add_argument('--overwrite', action='store_true', help='overwrite destination directory')
+    parser.add_argument('--dialect',
+                        choices=csv.list_dialects(),
+                        default='unix',
+                        help='select CSV dialect')
     args = parser.parse_args()
     return args
 
@@ -35,26 +39,12 @@ def store(data, dst_file):
                 writer.writerow([item.path])
 
 
-def store_users(users, dst_file):
-    with open(dst_file, "w") as csv_file:
-        writer = csv.DictWriter(csv_file, fieldnames=['name', 'sid', 'home', 'domain', 'hostname'])
-
-        writer.writeheader()
-        for user in users:
-            writer.writerow({
-                'name': user.name,
-                'sid': user.sid,
-                'home': user.home,
-                'domain': user.domain,
-                'hostname': user.hostname
-            })
-
-
 if __name__ == '__main__':
     logger = logging.getLogger("windows-timeline")
     coloredlogs.install(level='INFO')
 
     args = arguments()
+
     t = Target.open(args.image_path)
     t.apply()
 
@@ -69,7 +59,7 @@ if __name__ == '__main__':
             sys.exit(1)
     os.makedirs(dstdir)
 
-    factory = CsvFileFactory(dstdir)
+    factory = CsvFileFactory(dstdir, args.dialect)
 
     store(t.version, os.path.join(dstdir, "version.txt"))
     store(t.ips, os.path.join(dstdir, "ips.txt"))

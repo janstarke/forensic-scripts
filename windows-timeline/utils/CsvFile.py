@@ -2,9 +2,9 @@ import csv
 
 
 class CsvFile:
-    def __init__(self, filename: str, fields: list):
+    def __init__(self, filename: str, dialect: str, fields: list):
         self.__fields = fields
-        self.__writer = csv.DictWriter(open(filename, "w"), fieldnames=fields)
+        self.__writer = csv.DictWriter(open(filename, "w"), dialect=dialect, fieldnames=fields)
 
     def writerow(self, record):
         self.__writer.writerow(
