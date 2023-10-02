@@ -8,6 +8,7 @@ import os
 import shutil
 from dissect.target import Target, container, volume
 
+from tlnobjects import UserAssist
 
 def arguments():
     parser = argparse.ArgumentParser(
@@ -38,7 +39,13 @@ def store_users(users, dst_file):
 
         writer.writeheader()
         for user in users:
-            writer.writerow(user)
+            writer.writerow({
+                'name': user.name,
+                'sid': user.sid,
+                'home': user.home,
+                'domain': user.domain,
+                'hostname': user.hostname
+            })
 
 
 if __name__ == '__main__':
@@ -63,4 +70,5 @@ if __name__ == '__main__':
     store(t.version, os.path.join(dstdir, "version.txt"))
     store(t.ips, os.path.join(dstdir, "ips.txt"))
     store_users(t.users(), os.path.join(dstdir, "users.csv"))
-    store(t.userassist(), os.path.join(dstdir, "userassist.csv"))
+    ua = UserAssist(t)
+    ua.to_csv(open(os.path.join(dstdir, "userassist.csv"), "w"))
