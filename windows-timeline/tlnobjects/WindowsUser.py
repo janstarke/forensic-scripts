@@ -1,5 +1,5 @@
 from dissect.target import Target
-from .ExportableItem import ExportableItem, AbstractExportableItem
+from utils.ExportableItem import ExportableItem, AbstractExportableItem
 
 
 @ExportableItem(

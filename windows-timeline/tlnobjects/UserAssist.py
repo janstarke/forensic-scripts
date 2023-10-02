@@ -1,11 +1,18 @@
 from dissect.target import Target
-from .ExportableItem import ExportableItem, AbstractExportableItem
+from utils.ExportableItem import ExportableItem, AbstractExportableItem
 
 
 @ExportableItem(
-    filename = "userassist",
-    attributes=["ts", "username", "path", "hostname", "domain", "number_of_executions", "application_focus_count",
-                "regf_hive_path", "user_id"],
+    filename="userassist",
+    attributes=["ts",
+                "username",
+                "path",
+                "hostname",
+                "domain",
+                "number_of_executions",
+                "application_focus_count",
+                "regf_hive_path",
+                "user_id"],
     timestamp="ts"
 )
 class UserAssist(AbstractExportableItem):

@@ -1,5 +1,6 @@
 import argparse
 import csv
+import inspect
 import sys
 
 import coloredlogs
@@ -7,7 +8,9 @@ import logging
 import os
 import shutil
 from dissect.target import Target
+from dissect.target.exceptions import UnsupportedPluginError
 
+import tlnobjects
 from tlnobjects import *
 from utils import CsvFileFactory
 
@@ -64,5 +67,8 @@ if __name__ == '__main__':
     store(t.version, os.path.join(dstdir, "version.txt"))
     store(t.ips, os.path.join(dstdir, "ips.txt"))
 
-    UserAssist(t).to_csv(factory)
-    WindowsUser(t).to_csv(factory)
+    for _, obj in inspect.getmembers(tlnobjects, inspect.isclass):
+        try:
+            obj(t).to_csv(factory)
+        except UnsupportedPluginError as e:
+            logger.warning(e.root_cause_str())
