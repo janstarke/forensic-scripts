@@ -1,60 +1,24 @@
-import argparse
-import csv
 import inspect
-import sys
 
 import coloredlogs
 import logging
 import os
-import shutil
 from dissect.target import Target
 from dissect.target.exceptions import UnsupportedPluginError
 
 import tlnobjects
-from tlnobjects import *
+import utils
 from utils import CsvFileFactory, TxtFile
 
 
-def arguments():
-    parser = argparse.ArgumentParser(
-        prog="windows-timeline",
-        description="create a timeline of a windows image, using dissect"
-    )
-    parser.add_argument('image_path')
-    parser.add_argument('--overwrite', action='store_true', help='overwrite destination directory')
-    parser.add_argument('--dialect',
-                        choices=csv.list_dialects(),
-                        default='unix',
-                        help='select CSV dialect')
-    args = parser.parse_args()
-
-    return args
-
-
-def create_destination_directory(hostname: str):
-    dst = os.path.join(os.curdir, hostname)
-    if os.path.exists(dst):
-        if args.overwrite:
-            logger.info(f"target directory '{dst}' exists already, deleting it")
-            shutil.rmtree(dst)
-        else:
-            logger.error(f"target directory '{dst}' exists already, exiting")
-            sys.exit(1)
-    os.makedirs(dst)
-    return dst
-
-
-if __name__ == '__main__':
-    logger = logging.getLogger("windows-timeline")
-    coloredlogs.install(level='INFO')
-
-    args = arguments()
+def main():
+    args = utils.cli.arguments()
 
     t = Target.open(args.image_path)
     t.apply()
 
-    logger.info("found image with hostname '{hostname}'; creating target directory for it".format(hostname=t.hostname))
-    dstdir = create_destination_directory(t.hostname)
+    utils.cli.logger().info("found image with hostname '{hostname}'; creating target directory for it".format(hostname=t.hostname))
+    dstdir = utils.cli.create_destination_directory(args, t.hostname)
 
     factory = CsvFileFactory(dstdir, args.dialect)
 
@@ -73,4 +37,8 @@ if __name__ == '__main__':
         try:
             obj(t).to_csv(factory)
         except UnsupportedPluginError as e:
-            logger.warning(f"{obj.__name__}: {e.root_cause_str()}")
+            utils.cli.logger().warning(f"{obj.__name__}: {e.root_cause_str()}")
+
+
+if __name__ == '__main__':
+    main()
