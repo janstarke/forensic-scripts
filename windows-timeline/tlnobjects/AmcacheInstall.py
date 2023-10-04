@@ -3,10 +3,10 @@ from utils.ExportableItem import ExportableItem, AbstractExportableItem
 
 
 @ExportableItem(
-    filename = "amcache_install",
+    filename="amcache_install",
+    datasource="amcache_install",
     attributes=["last_insert", "last_removal", "info_origin"],
     timestamp="last_removal"
 )
 class AmcacheInstall(AbstractExportableItem):
-    def __init__(self, t: Target):
-        super(AmcacheInstall, self).__init__([u for u in t.amcache_install()])
+    pass

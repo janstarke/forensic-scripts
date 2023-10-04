@@ -4,9 +4,9 @@ from utils.ExportableItem import ExportableItem, AbstractExportableItem
 
 @ExportableItem(
     filename="users",
+    datasource="usb",
     attributes=['name', 'sid', 'home', 'domain', 'hostname'],
     timestamp=None
 )
 class WindowsUser(AbstractExportableItem):
-    def __init__(self, t: Target):
-        super(WindowsUser, self).__init__([u for u in t.users()])
+    pass

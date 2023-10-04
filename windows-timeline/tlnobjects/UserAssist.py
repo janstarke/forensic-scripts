@@ -4,6 +4,7 @@ from utils.ExportableItem import ExportableItem, AbstractExportableItem
 
 @ExportableItem(
     filename="userassist",
+    datasource="userassist",
     attributes=["ts",
                 "username",
                 "path",
@@ -16,5 +17,4 @@ from utils.ExportableItem import ExportableItem, AbstractExportableItem
     timestamp="ts"
 )
 class UserAssist(AbstractExportableItem):
-    def __init__(self, t: Target):
-        super(UserAssist, self).__init__([u for u in t.userassist()])
+    pass

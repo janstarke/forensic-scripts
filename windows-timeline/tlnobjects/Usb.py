@@ -3,10 +3,10 @@ from utils.ExportableItem import ExportableItem, AbstractExportableItem
 
 
 @ExportableItem(
-    filename = "usb",
+    filename="usb",
+    datasource="usb",
     attributes=["last_insert", "last_removal", "info_origin"],
     timestamp="last_removal"
 )
 class Usb(AbstractExportableItem):
-    def __init__(self, t: Target):
-        super(Usb, self).__init__([u for u in t.usb()])
+    pass
