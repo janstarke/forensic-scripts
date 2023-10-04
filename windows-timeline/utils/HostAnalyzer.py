@@ -23,7 +23,20 @@ class HostAnalyzer:
             "runkeys",
             "usb",
             "userassist",
-            "windowsuser"
+            "firewall",
+            "adpolicy",
+            "shimcache",
+            "muicache",
+            # "user_details", # SEGV
+            "activitiescache",
+            "bam",
+            "services",
+            "shellbags",
+            "startupinfo",
+            "tasks",
+            "trusteddocs",
+            #"wer", # https://github.com/fox-it/acquire/pull/66
+            #"usnjrnl" # takes a lot of time
         ]
 
     def write_hostinfo(self):
@@ -57,15 +70,8 @@ class HostAnalyzer:
         writer = CsvfileWriter(os.path.join(self.__dst_dir, filename),
                                exclude=["hostname", "domain", "_generated", "_source", "_classification", "_version"])
 
-        first_line = True
         for entry in records:
-
-            # trick the writer into believing that the description has not changed
-            if not first_line:
-                writer.desc = entry._desc
-
             writer.write(entry)
-            first_line = False
 
     def __create_destination_directory(self):
         logger().info(f"found image with hostname '{self.__target.hostname}'; creating target directory for it")
