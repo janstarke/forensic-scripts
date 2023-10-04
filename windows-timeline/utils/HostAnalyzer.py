@@ -61,7 +61,7 @@ class HostAnalyzer:
             self.write_csv(plugin, records)
             logger().info(f"run of {plugin} was successful")
         except UnsupportedPluginError as e:
-            logger().warning(f"{plugin.__name__}: {e.root_cause_str()}")
+            logger().warning(f"{plugin}: {e.root_cause_str()}")
 
     def write_csv(self, filename, records):
         if not filename.endswith(".csv"):
