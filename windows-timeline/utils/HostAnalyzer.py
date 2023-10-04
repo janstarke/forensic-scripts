@@ -17,12 +17,6 @@ class HostAnalyzer:
         self.__overwrite = overwrite
         self.__dst_dir = self.__create_destination_directory()
 
-    @staticmethod
-    def open(image_path: str, overwrite: bool = False):
-        t = Target.open(image_path)
-        t.apply()
-        return HostAnalyzer(t, overwrite)
-
     def write_hostinfo(self):
         usernames = [f"{u.domain or u.hostname}\\{u.name}" for u in self.__target.users()]
         TxtFile(self.__dst_dir, "hostinfo") \
