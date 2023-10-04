@@ -1,27 +1,20 @@
+import os
 from abc import ABCMeta
-from typing import Optional
 
 from dissect.target import Target
-
-from utils import CsvFileFactory
-from utils.cli import logger
+from flow.record.adapter.csvfile import CsvfileWriter
 
 
 class ExportableItem(object):
     def __init__(self,
                  filename: str,
                  datasource: str,
-                 attributes: list[str],
-                 timestamp: Optional[str]):
-        if timestamp and timestamp not in attributes:
-            raise SyntaxError(f"cannot sort by {timestamp}, because it is not an attribute")
+                 attributes: list[str]):
         self.__filename = filename
-        self.__timestamp = timestamp
         self.__attributes = attributes
         self.__datasource = datasource
 
     def __call__(self, cls):
-        cls.timestamp_attribute = staticmethod(lambda: self.__timestamp)
         cls.attributes = staticmethod(lambda: self.__attributes)
         cls.filename = staticmethod(lambda: self.__filename)
         cls.datasource = staticmethod(lambda: self.__datasource)
@@ -41,15 +34,21 @@ class AbstractExportableItem(object, metaclass=ABCMeta):
     def filename(self) -> list:
         pass
 
-    def to_csv(self, factory: CsvFileFactory):
-        try:
-            if self.timestamp_attribute():
-                self.__entries.sort(key=lambda e: e.__getattribute__(self.timestamp_attribute()))
-        except AttributeError as e:
-            logger().error(f"invalid argument name: {e.name}")
-            return
+    def to_csv(self, basedir: str):
 
-        csv_file = factory.open_csv_file(self.filename(), self.attributes())
+        filename = self.filename()
+        if not filename.endswith(".csv"):
+            filename += ".csv"
 
+        writer = CsvfileWriter(os.path.join(basedir, filename),
+                               exclude=["hostname", "domain", "_generated", "_source", "_classification", "_version"])
+
+        first_line = True
         for entry in self.__entries:
-            csv_file.writerow(entry)
+
+            # trick the writer into believing that the description has not changed
+            if not first_line:
+                writer.desc = entry._desc
+
+            writer.write(entry)
+            first_line = False
