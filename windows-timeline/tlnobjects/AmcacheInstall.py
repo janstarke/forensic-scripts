@@ -5,8 +5,8 @@ from utils.ExportableItem import ExportableItem, AbstractExportableItem
 @ExportableItem(
     filename="amcache_install",
     datasource="amcache_install",
-    attributes=["last_insert", "last_removal", "info_origin"],
-    timestamp="last_removal"
+    attributes=["start_time", "stop_time", "created", "modified", "access", "create", "filename", "longname", "path", "digests", "link_date"],
+    timestamp="start_time"
 )
 class AmcacheInstall(AbstractExportableItem):
     pass

@@ -5,6 +5,7 @@ class CsvFile:
     def __init__(self, filename: str, dialect: str, fields: list):
         self.__fields = fields
         self.__writer = csv.DictWriter(open(filename, "w"), dialect=dialect, fieldnames=fields)
+        self.__writer.writeheader()
 
     def writerow(self, record):
         self.__writer.writerow(

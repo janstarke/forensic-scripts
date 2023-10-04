@@ -4,6 +4,7 @@ from typing import Optional
 from dissect.target import Target
 
 from utils import CsvFileFactory
+from utils.cli import logger
 
 
 class ExportableItem(object):
@@ -41,8 +42,12 @@ class AbstractExportableItem(object, metaclass=ABCMeta):
         pass
 
     def to_csv(self, factory: CsvFileFactory):
-        if self.timestamp_attribute():
-            self.__entries.sort(key=lambda e: e.__getattribute__(self.timestamp_attribute()))
+        try:
+            if self.timestamp_attribute():
+                self.__entries.sort(key=lambda e: e.__getattribute__(self.timestamp_attribute()))
+        except AttributeError as e:
+            logger().error(f"invalid argument name: {e.name}")
+            return
 
         csv_file = factory.open_csv_file(self.filename(), self.attributes())
 
