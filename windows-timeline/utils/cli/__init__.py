@@ -31,16 +31,3 @@ def arguments():
     args = parser.parse_args()
 
     return args
-
-
-def create_destination_directory(args, hostname: str):
-    dst = os.path.join(os.curdir, hostname)
-    if os.path.exists(dst):
-        if args.overwrite:
-            logger().info(f"target directory '{dst}' exists already, deleting it")
-            shutil.rmtree(dst)
-        else:
-            logger().error(f"target directory '{dst}' exists already, exiting")
-            sys.exit(1)
-    os.makedirs(dst)
-    return dst
