@@ -4,7 +4,7 @@ from utils.ExportableItem import ExportableItem, AbstractExportableItem
 
 @ExportableItem(
     filename="users",
-    datasource="usb",
+    datasource="users",
     attributes=['name', 'sid', 'home', 'domain', 'hostname'],
     timestamp=None
 )
