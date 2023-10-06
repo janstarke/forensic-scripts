@@ -1,3 +1,5 @@
+import coloredlogs
+
 import utils
 from utils import HostAnalyzer
 
@@ -11,4 +13,5 @@ def main():
 
 
 if __name__ == '__main__':
+    coloredlogs.install(level='INFO')
     main()

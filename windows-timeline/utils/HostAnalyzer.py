@@ -2,6 +2,7 @@ import os
 import shutil
 import sys
 
+import dissect
 from dissect.target import Target
 from dissect.target.exceptions import UnsupportedPluginError
 from flow.record.adapter.csvfile import CsvfileWriter
@@ -27,7 +28,7 @@ class HostAnalyzer:
             "adpolicy",
             "shimcache",
             "muicache",
-            # "user_details", # SEGV
+            ## "user_details", # SEGV
             "activitiescache",
             "bam",
             "services",
@@ -35,8 +36,11 @@ class HostAnalyzer:
             "startupinfo",
             "tasks",
             "trusteddocs",
-            #"wer", # https://github.com/fox-it/acquire/pull/66
-            #"usnjrnl" # takes a lot of time
+            ("edge", "history"),
+            ("chrome", "history"),
+            ("firefox", "history"),
+            ##"wer", # https://github.com/fox-it/acquire/pull/66
+            ##"usnjrnl" # takes a lot of time
         ]
 
     def write_hostinfo(self):
@@ -57,8 +61,17 @@ class HostAnalyzer:
 
     def invoke_plugin(self, plugin):
         try:
-            records = getattr(self.__target, plugin)()
-            self.write_csv(plugin, records)
+            target = self.__target
+            filename = plugin
+            if isinstance(plugin, tuple):
+                filename = "_".join(plugin)
+                for p in plugin[:-1]:
+                    target = getattr(target, p)
+                plugin = plugin[-1]
+
+            assert isinstance(plugin, str)
+            records = getattr(target, plugin)()
+            self.write_csv(filename, records)
             logger().info(f"run of {plugin} was successful")
         except UnsupportedPluginError as e:
             logger().warning(f"{plugin}: {e.root_cause_str()}")
